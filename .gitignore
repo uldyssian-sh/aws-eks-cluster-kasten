@@ -1,0 +1,39 @@
+# Environment files
+.env
+*.env
+
+# Certificates and keys
+certs/
+*.crt
+*.key
+*.pem
+
+# Artifacts and logs
+artifacts/
+*.log
+
+# Manifests (generated)
+manifests/
+
+# Backup files
+*.bak
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
