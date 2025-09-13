@@ -119,7 +119,7 @@ CREATE_OUTPUT=$(aws eks create-cluster \
 CREATE_EXIT_CODE=$?
 echo "${CREATE_OUTPUT}"
 
-if [ ${CREATE_EXIT_CODE} -ne 0 ]; then
+if [ "${CREATE_EXIT_CODE}" -ne 0 ]; then
   echo -e "${RED}Failed to create EKS cluster. Error above shows the reason.${NC}"
   exit 1
 fi
