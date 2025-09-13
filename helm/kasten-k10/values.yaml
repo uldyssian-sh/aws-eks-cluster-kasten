@@ -1,0 +1,26 @@
+# Default values for kasten-k10-deployment
+# This is a YAML-formatted file.
+
+k10:
+  # Kasten K10 configuration
+  auth:
+    tokenAuth:
+      enabled: true
+  
+  # Ingress configuration
+  ingress:
+    create: false
+    host: ""
+    tls:
+      enabled: false
+      secretName: ""
+  
+  # Persistence configuration
+  persistence:
+    storageClass: "gp2"
+    size: "20Gi"
+  
+  # Service account configuration
+  serviceAccount:
+    create: true
+    annotations: {}

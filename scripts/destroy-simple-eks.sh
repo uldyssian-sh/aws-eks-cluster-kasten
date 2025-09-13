@@ -6,15 +6,16 @@ CYAN="\033[0;36m"; MAGENTA="\033[0;35m"; GREEN="\033[0;32m"; RED="\033[0;31m"; N
 echo -e "${MAGENTA}=== Simple EKS Cluster Destruction ===${NC}"
 
 if [ -f .env ]; then
+  # shellcheck disable=SC1091
   set -a; source .env; set +a
 fi
 
 echo -e "${CYAN}Cluster name [${CLUSTER_NAME:-kasten-eks}]: ${NC}"
-read CLUSTER_NAME_IN
+read -r CLUSTER_NAME_IN
 CLUSTER_NAME="${CLUSTER_NAME_IN:-${CLUSTER_NAME:-kasten-eks}}"
 
 echo -e "${CYAN}AWS Region [${AWS_REGION:-us-west-2}]: ${NC}"
-read AWS_REGION_IN
+read -r AWS_REGION_IN
 AWS_REGION="${AWS_REGION_IN:-${AWS_REGION:-us-west-2}}"
 
 echo -e "${MAGENTA}Uninstalling AWS Load Balancer Controller...${NC}"
@@ -30,7 +31,7 @@ if [ -n "${ALB_POLICY_ARN}" ] && [ "${ALB_POLICY_ARN}" != "None" ]; then
 fi
 
 echo -e "${MAGENTA}Deleting EKS cluster with eksctl...${NC}"
-eksctl delete cluster --name="${CLUSTER_NAME}" --region="${AWS_REGION}"
+eksctl delete cluster --name="${CLUSTER_NAME}" --region="${AWS_REGION}" || true
 
 echo -e "${MAGENTA}Cleaning up local files...${NC}"
 rm -f .env
@@ -43,8 +44,8 @@ echo -e "${CYAN}Checking remaining AWS resources...${NC}"
 
 # Check remaining resources
 REMAINING_CLUSTERS=$(aws eks list-clusters --region "${AWS_REGION}" --query 'clusters' --output text 2>/dev/null || true)
-REMAINING_CF_STACKS=$(aws cloudformation list-stacks --region "${AWS_REGION}" --query 'StackSummaries[?contains(StackName, `eksctl-${CLUSTER_NAME}`) && StackStatus != `DELETE_COMPLETE`].StackName' --output text 2>/dev/null || true)
-REMAINING_ALB_POLICIES=$(aws iam list-policies --scope Local --query 'Policies[?contains(PolicyName, `LoadBalancer`) && contains(PolicyName, `${CLUSTER_NAME}`)].PolicyName' --output text 2>/dev/null || true)
+REMAINING_CF_STACKS=$(aws cloudformation list-stacks --region "${AWS_REGION}" --query "StackSummaries[?contains(StackName, \`eksctl-${CLUSTER_NAME}\`) && StackStatus != \`DELETE_COMPLETE\`].StackName" --output text 2>/dev/null || true)
+REMAINING_ALB_POLICIES=$(aws iam list-policies --scope Local --query "Policies[?contains(PolicyName, \`LoadBalancer\`) && contains(PolicyName, \`${CLUSTER_NAME}\`)].PolicyName" --output text 2>/dev/null || true)
 
 if [ -z "${REMAINING_CLUSTERS}" ] || [ "${REMAINING_CLUSTERS}" = "None" ]; then
   echo -e "${GREEN}✅ EKS Clusters: 0 remaining${NC}"

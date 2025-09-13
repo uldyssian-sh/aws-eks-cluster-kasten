@@ -28,10 +28,16 @@ jobs:
           
       - name: Test Script Syntax
         run: |
-          for script in scripts/*.sh; do
-            echo "Testing $script"
-            bash -n "$script"
-          done
+          if [ -d "scripts" ]; then
+            for script in scripts/*.sh; do
+              if [ -f "$script" ]; then
+                echo "Testing $script"
+                bash -n "$script"
+              fi
+            done
+          else
+            echo "No scripts directory found"
+          fi
           
       - name: Validate Terraform
         if: hashFiles('terraform/*.tf') != ''
@@ -44,12 +50,25 @@ jobs:
         run: |
           cd terraform
           terraform fmt -check
+          terraform init -backend=false
           terraform validate
+          
+      - name: Setup Helm
+        if: hashFiles('helm/*/Chart.yaml') != ''
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.12.0'
           
       - name: Validate Helm Charts
         if: hashFiles('helm/*/Chart.yaml') != ''
         run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-          for chart in helm/*/; do
-            helm lint "$chart"
-          done
+          if [ -d "helm" ]; then
+            for chart in helm/*/; do
+              if [ -d "$chart" ] && [ -f "$chart/Chart.yaml" ]; then
+                echo "Linting chart: $chart"
+                helm lint "$chart"
+              fi
+            done
+          else
+            echo "No helm directory found"
+          fi

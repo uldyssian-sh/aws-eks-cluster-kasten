@@ -7,15 +7,16 @@ echo -e "${MAGENTA}=== EKS Cluster Destruction ===${NC}"
 
 # Load environment if available
 if [ -f .env ]; then
+  # shellcheck disable=SC1091
   set -a; source .env; set +a
 fi
 
 echo -e "${CYAN}EKS Cluster name [${CLUSTER_NAME:-kasten-cluster}]: ${NC}"
-read CLUSTER_NAME_IN
+read -r CLUSTER_NAME_IN
 CLUSTER_NAME="${CLUSTER_NAME_IN:-${CLUSTER_NAME:-kasten-cluster}}"
 
 echo -e "${CYAN}AWS Region [${AWS_REGION:-us-west-2}]: ${NC}"
-read AWS_REGION_IN
+read -r AWS_REGION_IN
 AWS_REGION="${AWS_REGION_IN:-${AWS_REGION:-us-west-2}}"
 
 # Derive resource names
@@ -89,7 +90,7 @@ fi
 echo -e "${MAGENTA}Deleting OIDC provider...${NC}"
 OIDC_ISSUER=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --region "${AWS_REGION}" --query "cluster.identity.oidc.issuer" --output text 2>/dev/null || true)
 if [ -n "${OIDC_ISSUER}" ]; then
-  OIDC_HOST=$(echo "${OIDC_ISSUER}" | sed -e 's~https://~~')
+  OIDC_HOST="${OIDC_ISSUER#https://}"
   OIDC_ARN=$(aws iam list-open-id-connect-providers --query "OpenIDConnectProviderList[?contains(Arn, '${OIDC_HOST}')].Arn" --output text)
   if [ -n "${OIDC_ARN}" ]; then
     echo "  ✓ Deleting OIDC provider: ${OIDC_ARN}"
@@ -125,7 +126,7 @@ if [ -n "${VPC_ID:-}" ]; then
   done
 
   # Delete route tables (except main)
-  RT_IDS=$(aws ec2 describe-route-tables --filters "Name=vpc-id,Values=${VPC_ID}" --query 'RouteTables[?Associations[0].Main!=`true`].RouteTableId' --output text --region "${AWS_REGION}" 2>/dev/null || true)
+  RT_IDS=$(aws ec2 describe-route-tables --filters "Name=vpc-id,Values=${VPC_ID}" --query "RouteTables[?Associations[0].Main!=\`true\`].RouteTableId" --output text --region "${AWS_REGION}" 2>/dev/null || true)
   for RT_ID in ${RT_IDS}; do
     if [ -n "${RT_ID}" ]; then
       echo "  ✓ Deleting route table: ${RT_ID}"

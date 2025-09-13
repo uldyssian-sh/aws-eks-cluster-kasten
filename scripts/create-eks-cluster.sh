@@ -7,27 +7,27 @@ echo -e "${MAGENTA}=== EKS Cluster Creation for Kasten K10 ===${NC}"
 
 # Interactive inputs
 echo -e "${CYAN}EKS Cluster name [kasten-cluster]: ${NC}"
-read CLUSTER_NAME
+read -r CLUSTER_NAME
 CLUSTER_NAME="${CLUSTER_NAME:-kasten-cluster}"
 
 echo -e "${CYAN}AWS Region [us-west-2]: ${NC}"
-read AWS_REGION
+read -r AWS_REGION
 AWS_REGION="${AWS_REGION:-us-west-2}"
 
 echo -e "${CYAN}Kubernetes version [1.29]: ${NC}"
-read K8S_VERSION
+read -r K8S_VERSION
 K8S_VERSION="${K8S_VERSION:-1.29}"
 
 echo -e "${CYAN}Node instance type [t3.medium]: ${NC}"
-read INSTANCE_TYPE
+read -r INSTANCE_TYPE
 INSTANCE_TYPE="${INSTANCE_TYPE:-t3.medium}"
 
 echo -e "${CYAN}Desired node count [3]: ${NC}"
-read NODE_COUNT
+read -r NODE_COUNT
 NODE_COUNT="${NODE_COUNT:-3}"
 
 echo -e "${CYAN}VPC CIDR [10.0.0.0/16]: ${NC}"
-read VPC_CIDR
+read -r VPC_CIDR
 VPC_CIDR="${VPC_CIDR:-10.0.0.0/16}"
 
 echo -e "${MAGENTA}Creating VPC for EKS cluster...${NC}"
@@ -42,7 +42,7 @@ aws ec2 create-tags --resources "${IGW_ID}" --tags Key=Name,Value="${CLUSTER_NAM
 aws ec2 attach-internet-gateway --internet-gateway-id "${IGW_ID}" --vpc-id "${VPC_ID}" --region "${AWS_REGION}"
 
 echo -e "${MAGENTA}Creating subnets...${NC}"
-AZS=($(aws ec2 describe-availability-zones --region "${AWS_REGION}" --query 'AvailabilityZones[0:3].ZoneName' --output text))
+mapfile -t AZS < <(aws ec2 describe-availability-zones --region "${AWS_REGION}" --query 'AvailabilityZones[0:3].ZoneName' --output text | tr '\t' '\n')
 
 # Public subnets
 PUB_SUBNET_1=$(aws ec2 create-subnet --vpc-id "${VPC_ID}" --cidr-block "10.0.1.0/24" --availability-zone "${AZS[0]}" --query 'Subnet.SubnetId' --output text --region "${AWS_REGION}")
@@ -164,7 +164,7 @@ aws eks create-nodegroup \
   --scaling-config minSize=1,maxSize=5,desiredSize="${NODE_COUNT}" \
   --region "${AWS_REGION}"
 
-if [ $? -ne 0 ]; then
+if ! aws eks describe-cluster --name "${CLUSTER_NAME}" --region "${AWS_REGION}" >/dev/null 2>&1; then
   echo -e "${RED}Failed to create node group. Exiting.${NC}"
   exit 1
 fi
@@ -175,7 +175,7 @@ aws eks wait nodegroup-active --cluster-name "${CLUSTER_NAME}" --nodegroup-name 
 echo -e "${MAGENTA}Installing AWS Load Balancer Controller...${NC}"
 # Create OIDC provider
 OIDC_ISSUER=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --region "${AWS_REGION}" --query "cluster.identity.oidc.issuer" --output text)
-OIDC_HOST=$(echo "${OIDC_ISSUER}" | sed -e 's~https://~~')
+OIDC_HOST="${OIDC_ISSUER#https://}"
 THUMBPRINT="9e99a48a9960b14926bb7f3b02e22da2b0ab7280"
 
 aws iam create-open-id-connect-provider \

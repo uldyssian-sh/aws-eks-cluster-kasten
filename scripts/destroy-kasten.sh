@@ -7,19 +7,24 @@ echo -e "${MAGENTA}=== Kasten K10 Destruction ===${NC}"
 
 # Load environment if available
 if [ -f .env ]; then
+  # shellcheck disable=SC1091
   set -a; source .env; set +a
 fi
 
 echo -e "${CYAN}EKS Cluster name [${CLUSTER_NAME:-}]: ${NC}"
-read CLUSTER_NAME_IN
+read -r CLUSTER_NAME_IN
 CLUSTER_NAME="${CLUSTER_NAME_IN:-${CLUSTER_NAME}}"
+if [[ -z "${CLUSTER_NAME}" ]]; then
+  echo -e "${RED}Error: Cluster name is required${NC}"
+  exit 1
+fi
 
 echo -e "${CYAN}AWS Region [${AWS_REGION:-us-west-2}]: ${NC}"
-read AWS_REGION_IN
+read -r AWS_REGION_IN
 AWS_REGION="${AWS_REGION_IN:-${AWS_REGION:-us-west-2}}"
 
 echo -e "${CYAN}Kasten namespace [${K10_NAMESPACE:-kasten-io}]: ${NC}"
-read K10_NAMESPACE_IN
+read -r K10_NAMESPACE_IN
 K10_NAMESPACE="${K10_NAMESPACE_IN:-${K10_NAMESPACE:-kasten-io}}"
 
 # Derive resource names
@@ -77,7 +82,7 @@ fi
 
 # Only clean up Kasten-specific roles, not EKS system roles
 echo "  ✓ Checking for additional Kasten roles..."
-KASTEN_ROLES=$(aws iam list-roles --query 'Roles[?contains(RoleName, `Kasten`) && !contains(RoleName, `EKS`) && !contains(RoleName, `LoadBalancer`) && !contains(RoleName, `eksctl`)].RoleName' --output text 2>/dev/null || true)
+KASTEN_ROLES=$(aws iam list-roles --query "Roles[?contains(RoleName, \`Kasten\`) && !contains(RoleName, \`EKS\`) && !contains(RoleName, \`LoadBalancer\`) && !contains(RoleName, \`eksctl\`)].RoleName" --output text 2>/dev/null || true)
 for KASTEN_ROLE in ${KASTEN_ROLES}; do
   if [ -n "${KASTEN_ROLE}" ] && [ "${KASTEN_ROLE}" != "None" ]; then
     echo "    - Found Kasten role: ${KASTEN_ROLE}"
@@ -95,7 +100,7 @@ done
 
 # Clean up only Kasten-specific policies
 echo "  ✓ Checking for additional Kasten policies..."
-KASTEN_POLICIES=$(aws iam list-policies --scope Local --query 'Policies[?contains(PolicyName, `Kasten`) && !contains(PolicyName, `LoadBalancer`)].Arn' --output text 2>/dev/null || true)
+KASTEN_POLICIES=$(aws iam list-policies --scope Local --query "Policies[?contains(PolicyName, \`Kasten\`) && !contains(PolicyName, \`LoadBalancer\`)].Arn" --output text 2>/dev/null || true)
 if [ -n "${KASTEN_POLICIES}" ] && [ "${KASTEN_POLICIES}" != "None" ]; then
   for POLICY_ARN in ${KASTEN_POLICIES}; do
     if [ -n "${POLICY_ARN}" ] && [ "${POLICY_ARN}" != "None" ]; then
@@ -171,8 +176,8 @@ echo -e "\n${MAGENTA}=== FINAL VERIFICATION REPORT ===${NC}"
 echo -e "${CYAN}Checking remaining Kasten resources...${NC}"
 
 # Check for any remaining Kasten IAM resources
-REMAINING_KASTEN_ROLES=$(aws iam list-roles --query 'Roles[?contains(RoleName, `Kasten`) && !contains(RoleName, `EKS`) && !contains(RoleName, `LoadBalancer`)].RoleName' --output text 2>/dev/null || true)
-REMAINING_KASTEN_POLICIES=$(aws iam list-policies --scope Local --query 'Policies[?contains(PolicyName, `Kasten`) && !contains(PolicyName, `LoadBalancer`)].PolicyName' --output text 2>/dev/null || true)
+REMAINING_KASTEN_ROLES=$(aws iam list-roles --query "Roles[?contains(RoleName, \`Kasten\`) && !contains(RoleName, \`EKS\`) && !contains(RoleName, \`LoadBalancer\`)].RoleName" --output text 2>/dev/null || true)
+REMAINING_KASTEN_POLICIES=$(aws iam list-policies --scope Local --query "Policies[?contains(PolicyName, \`Kasten\`) && !contains(PolicyName, \`LoadBalancer\`)].PolicyName" --output text 2>/dev/null || true)
 
 if [ -z "${REMAINING_KASTEN_ROLES}" ] || [ "${REMAINING_KASTEN_ROLES}" = "None" ]; then
   echo -e "${GREEN}✅ Kasten IAM Roles: 0 remaining${NC}"

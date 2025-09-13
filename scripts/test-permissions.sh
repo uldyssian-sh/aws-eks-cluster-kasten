@@ -18,4 +18,13 @@ echo -e "\n5. Testing if cluster already exists:"
 aws eks describe-cluster --name kasten-cluster --region us-west-2 2>/dev/null && echo "Cluster EXISTS" || echo "Cluster does not exist"
 
 echo -e "\n6. Testing cluster creation with minimal config:"
-aws eks create-cluster --name test-cluster-permissions --version 1.29 --role-arn arn:aws:iam::123456789012:role/test --resources-vpc-config subnetIds=subnet-12345 --region us-west-2 --dry-run 2>&1 || echo "This shows what error we'd get"
+# Get actual account ID and create valid test ARN
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+TEST_ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/eksServiceRole"
+
+# Get first available subnet
+TEST_SUBNET=$(aws ec2 describe-subnets --query 'Subnets[0].SubnetId' --output text 2>/dev/null || echo "subnet-12345")
+
+echo "Using test role: ${TEST_ROLE_ARN}"
+echo "Using test subnet: ${TEST_SUBNET}"
+aws eks create-cluster --name test-cluster-permissions --version 1.29 --role-arn "${TEST_ROLE_ARN}" --resources-vpc-config subnetIds="${TEST_SUBNET}" --region us-west-2 --dry-run 2>&1 || echo "This shows what error we'd get"

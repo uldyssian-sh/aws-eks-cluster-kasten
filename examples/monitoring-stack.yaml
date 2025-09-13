@@ -66,7 +66,8 @@ spec:
         configMap:
           name: prometheus-config
       - name: storage
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: prometheus-storage
 ---
 apiVersion: v1
 kind: Service
@@ -79,7 +80,28 @@ spec:
   ports:
     - port: 9090
       targetPort: 9090
-  type: LoadBalancer
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-storage
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-admin-secret
+  namespace: monitoring
+type: Opaque
+data:
+  password: YWRtaW4xMjM=  # base64 encoded 'admin123' - change this!
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -147,7 +169,10 @@ spec:
         - containerPort: 3000
         env:
         - name: GF_SECURITY_ADMIN_PASSWORD
-          value: "admin123"
+          valueFrom:
+            secretKeyRef:
+              name: grafana-admin-secret
+              key: password
         volumeMounts:
         - name: dashboards
           mountPath: /var/lib/grafana/dashboards
@@ -167,4 +192,4 @@ spec:
   ports:
     - port: 3000
       targetPort: 3000
-  type: LoadBalancer
+  type: ClusterIP

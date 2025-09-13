@@ -102,14 +102,16 @@ output "cluster_info" {
   }
 }
 
-# Cost estimation
+# Cost estimation (WARNING: Pricing is approximate and based on us-west-2 region as of 2024)
+# Please verify current AWS pricing at https://calculator.aws for accurate estimates
 output "estimated_monthly_cost" {
-  description = "Estimated monthly cost breakdown (USD)"
+  description = "Estimated monthly cost breakdown (USD) - prices may vary by region and time"
   value = {
-    eks_control_plane = "73.00"
-    worker_nodes      = "${var.node_group_desired_size * 31.00}"  # t3.medium pricing
-    ebs_storage      = "${var.node_group_desired_size * var.node_disk_size * 0.10}"
-    load_balancer    = "22.00"
-    total_estimated  = "${73 + (var.node_group_desired_size * 31) + (var.node_group_desired_size * var.node_disk_size * 0.10) + 22}"
+    eks_control_plane = "73.00"                                                      # EKS cluster cost
+    worker_nodes      = "${var.node_group_desired_size * 31.00}"                     # t3.medium pricing
+    ebs_storage       = "${var.node_group_desired_size * var.node_disk_size * 0.10}" # gp3 storage
+    load_balancer     = "22.00"                                                      # ALB cost
+    total_estimated   = "${73 + (var.node_group_desired_size * 31) + (var.node_group_desired_size * var.node_disk_size * 0.10) + 22}"
+    note              = "Prices are estimates based on us-west-2 region. Use AWS Pricing Calculator for accurate costs."
   }
 }

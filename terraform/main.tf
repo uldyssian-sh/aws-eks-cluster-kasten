@@ -2,7 +2,7 @@
 # Production-ready infrastructure as code
 
 terraform {
-  required_version = ">= 1.6"
+  required_version = ">= 1.5"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -21,7 +21,7 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-  
+
   default_tags {
     tags = {
       Project     = "kasten-eks"
@@ -44,7 +44,7 @@ data "aws_caller_identity" "current" {}
 
 # VPC Configuration
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
   name = "${var.cluster_name}-vpc"
@@ -70,7 +70,7 @@ module "vpc" {
 
 # EKS Cluster
 module "eks" {
-  source = "terraform-aws-modules/eks/aws"
+  source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0"
 
   cluster_name    = var.cluster_name
@@ -107,7 +107,7 @@ module "eks" {
       desired_size = var.node_group_desired_size
 
       ami_type = "AL2_x86_64"
-      
+
       block_device_mappings = {
         xvda = {
           device_name = "/dev/xvda"
@@ -147,13 +147,14 @@ module "eks" {
   }
 }
 
+# Random ID for S3 bucket suffix
+resource "random_id" "bucket_suffix" {
+  byte_length = 4
+}
+
 # S3 Bucket for Kasten Backups
 resource "aws_s3_bucket" "kasten_backups" {
   bucket = "${var.cluster_name}-kasten-backups-${random_id.bucket_suffix.hex}"
-}
-
-resource "random_id" "bucket_suffix" {
-  byte_length = 4
 }
 
 resource "aws_s3_bucket_versioning" "kasten_backups" {
@@ -169,7 +170,7 @@ resource "aws_s3_bucket_encryption" "kasten_backups" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
+        sse_algorithm = "aws:kms"
       }
     }
   }

@@ -7,35 +7,48 @@ echo -e "${MAGENTA}=== Kasten K10 Deployment on EKS ===${NC}"
 
 # Interactive inputs
 echo -e "${CYAN}EKS Cluster name: ${NC}"
-read CLUSTER_NAME
+read -r CLUSTER_NAME
+if [[ -z "${CLUSTER_NAME}" ]]; then
+  echo -e "${RED}Error: Cluster name is required${NC}"
+  exit 1
+fi
+
 echo -e "${CYAN}AWS Region [us-west-2]: ${NC}"
-read AWS_REGION
+read -r AWS_REGION
 AWS_REGION="${AWS_REGION:-us-west-2}"
 
 echo -e "${CYAN}Kasten namespace [kasten-io]: ${NC}"
-read K10_NAMESPACE
+read -r K10_NAMESPACE
 K10_NAMESPACE="${K10_NAMESPACE:-kasten-io}"
 
 echo -e "${CYAN}Domain for HTTPS access (e.g., k10.example.com): ${NC}"
-read DOMAIN_NAME
+read -r DOMAIN_NAME
+if [[ -z "${DOMAIN_NAME}" ]]; then
+  echo -e "${RED}Error: Domain name is required${NC}"
+  exit 1
+fi
 
 echo -e "${CYAN}S3 Bucket name for backups: ${NC}"
-read S3_BUCKET
+read -r S3_BUCKET
+if [[ -z "${S3_BUCKET}" ]]; then
+  echo -e "${RED}Error: S3 bucket name is required${NC}"
+  exit 1
+fi
 
 echo -e "${CYAN}Country code for SSL cert [US]: ${NC}"
-read CERT_COUNTRY
+read -r CERT_COUNTRY
 CERT_COUNTRY="${CERT_COUNTRY:-US}"
 
 echo -e "${CYAN}State for SSL cert [California]: ${NC}"
-read CERT_STATE
+read -r CERT_STATE
 CERT_STATE="${CERT_STATE:-California}"
 
 echo -e "${CYAN}City for SSL cert [San Francisco]: ${NC}"
-read CERT_CITY
+read -r CERT_CITY
 CERT_CITY="${CERT_CITY:-San Francisco}"
 
 echo -e "${CYAN}Organization for SSL cert [MyOrg]: ${NC}"
-read CERT_ORG
+read -r CERT_ORG
 CERT_ORG="${CERT_ORG:-MyOrg}"
 
 echo -e "${MAGENTA}Updating kubeconfig for cluster ${CLUSTER_NAME}...${NC}"
@@ -111,7 +124,7 @@ POLICY_ARN=$(aws iam create-policy \
 echo -e "${MAGENTA}Creating IAM role for Kasten K10...${NC}"
 ROLE_NAME="KastenK10Role"
 OIDC_ISSUER=$(aws eks describe-cluster --name "${CLUSTER_NAME}" --region "${AWS_REGION}" --query "cluster.identity.oidc.issuer" --output text)
-OIDC_HOST=$(echo "${OIDC_ISSUER}" | sed -e 's~https://~~')
+OIDC_HOST="${OIDC_ISSUER#https://}"
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
 TRUST_POLICY='{
@@ -169,9 +182,6 @@ echo "Note: Configure S3 backup location in Kasten UI using bucket: ${S3_BUCKET}
 echo -e "${MAGENTA}Getting K10 dashboard token...${NC}"
 TOKEN=$(kubectl create token gateway -n "${K10_NAMESPACE}" --duration=24h)
 
-echo -e "${MAGENTA}Creating LoadBalancer service for external access...${NC}"
-kubectl patch svc gateway -n "${K10_NAMESPACE}" -p '{"spec":{"type":"LoadBalancer"}}' || true
-
 echo -e "${MAGENTA}Getting external LoadBalancer URL...${NC}"
 echo "  ⏳ Waiting for LoadBalancer to get external IP..."
 for i in {1..20}; do
@@ -180,7 +190,7 @@ for i in {1..20}; do
     break
   fi
   echo "    Waiting... (${i}/20)"
-  sleep 15
+  sleep 10
 done
 
 if [ -z "${EXTERNAL_URL}" ]; then

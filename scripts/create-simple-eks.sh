@@ -6,11 +6,11 @@ CYAN="\033[0;36m"; MAGENTA="\033[0;35m"; GREEN="\033[0;32m"; RED="\033[0;31m"; N
 echo -e "${MAGENTA}=== Simple EKS Cluster Creation ===${NC}"
 
 echo -e "${CYAN}Cluster name [kasten-eks]: ${NC}"
-read CLUSTER_NAME
+read -r CLUSTER_NAME
 CLUSTER_NAME="${CLUSTER_NAME:-kasten-eks}"
 
 echo -e "${CYAN}AWS Region [us-west-2]: ${NC}"
-read AWS_REGION
+read -r AWS_REGION
 AWS_REGION="${AWS_REGION:-us-west-2}"
 
 echo -e "${MAGENTA}Using eksctl to create cluster (much simpler)...${NC}"
@@ -97,6 +97,9 @@ ALB_POLICY_ARN=$(aws iam create-policy \
   --output text 2>/dev/null || \
   aws iam list-policies --scope Local --query "Policies[?PolicyName=='AWSLoadBalancerControllerIAMPolicy-${CLUSTER_NAME}'].Arn" --output text)
 
+# Cleanup temporary file
+rm -f /tmp/alb-policy.json
+
 eksctl create iamserviceaccount \
   --cluster="${CLUSTER_NAME}" \
   --namespace=kube-system \
@@ -124,7 +127,7 @@ echo -e "${MAGENTA}Installing EBS CSI Driver...${NC}"
 eksctl create addon --name aws-ebs-csi-driver --cluster="${CLUSTER_NAME}" --region="${AWS_REGION}" --force
 
 echo -e "${MAGENTA}Waiting for EBS CSI Driver to be ready...${NC}"
-sleep 30
+kubectl wait --for=condition=ready pod -l app=ebs-csi-controller -n kube-system --timeout=300s || echo "EBS CSI Driver may still be starting"
 
 echo -e "${MAGENTA}Creating immediate binding storage class...${NC}"
 cat <<EOF | kubectl apply -f -

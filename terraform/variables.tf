@@ -115,14 +115,18 @@ variable "backup_retention_days" {
 variable "backup_schedule" {
   description = "Cron schedule for automated backups"
   type        = string
-  default     = "0 2 * * *"  # Daily at 2 AM
+  default     = "0 2 * * *" # Daily at 2 AM
 }
 
 # Security Configuration
 variable "allowed_cidr_blocks" {
   description = "CIDR blocks allowed to access Kasten dashboard"
   type        = list(string)
-  default     = ["0.0.0.0/0"]  # Restrict in production
+  default     = ["10.0.0.0/8"] # Restrict to private networks by default
+  validation {
+    condition     = length(var.allowed_cidr_blocks) > 0
+    error_message = "At least one CIDR block must be specified."
+  }
 }
 
 variable "enable_encryption" {
