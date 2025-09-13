@@ -9,7 +9,7 @@
 
 A comprehensive **Infrastructure as Code** solution for deploying production-ready Amazon EKS clusters with **Kasten K10 data protection platform**. This repository provides both **shell scripts** and **Terraform modules** for automated deployment, backup, and disaster recovery on AWS.
 
-> **Author**: uldyssian-sh (LT) · **Version**: 2.0 · **License**: MIT
+> **Author**: LT - [GitHub Profile](https://github.com/uldyssian-sh) · **Version**: 2.0 · **License**: MIT
 
 ---
 
