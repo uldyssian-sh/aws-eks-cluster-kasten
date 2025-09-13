@@ -1,0 +1,28 @@
+apiVersion: v2
+name: kasten-k10-deployment
+description: Helm chart for deploying Kasten K10 on AWS EKS with enterprise configurations
+type: application
+version: 1.0.0
+appVersion: "6.5.0"
+
+keywords:
+  - kasten
+  - k10
+  - backup
+  - disaster-recovery
+  - kubernetes
+  - aws
+  - eks
+
+home: https://github.com/uldyssian-sh/aws-eks-cluster-kasten
+sources:
+  - https://github.com/uldyssian-sh/aws-eks-cluster-kasten
+
+maintainers:
+  - name: uldyssian-sh
+    url: https://github.com/uldyssian-sh
+
+dependencies:
+  - name: k10
+    version: "6.5.0"
+    repository: https://charts.kasten.io/

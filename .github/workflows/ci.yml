@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+        continue-on-error: true
+        
+      - name: Validate Shell Scripts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          find scripts/ -name "*.sh" -exec shellcheck {} \;
+          
+      - name: Test Script Syntax
+        run: |
+          for script in scripts/*.sh; do
+            echo "Testing $script"
+            bash -n "$script"
+          done
+          
+      - name: Validate Terraform
+        if: hashFiles('terraform/*.tf') != ''
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+          
+      - name: Terraform Format Check
+        if: hashFiles('terraform/*.tf') != ''
+        run: |
+          cd terraform
+          terraform fmt -check
+          terraform validate
+          
+      - name: Validate Helm Charts
+        if: hashFiles('helm/*/Chart.yaml') != ''
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+          for chart in helm/*/; do
+            helm lint "$chart"
+          done

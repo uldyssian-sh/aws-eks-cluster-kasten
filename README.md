@@ -1,6 +1,17 @@
 # AWS EKS Cluster with Kasten K10 Backup Solution
 
-A comprehensive automation suite for deploying Amazon EKS clusters with Kasten K10 data protection platform. This repository provides production-ready scripts for creating, configuring, and managing Kubernetes backup and disaster recovery solutions on AWS.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![AWS](https://img.shields.io/badge/AWS-EKS%20%7C%20S3%20%7C%20IAM-orange)](https://aws.amazon.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-1.29-blue)](https://kubernetes.io/)
+[![Kasten](https://img.shields.io/badge/Kasten-K10%206.5-green)](https://www.kasten.io/)
+[![Terraform](https://img.shields.io/badge/Terraform-1.6%2B-purple)](https://www.terraform.io/)
+[![CI](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/actions/workflows/ci.yml/badge.svg)](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/actions/workflows/ci.yml)
+
+A comprehensive **Infrastructure as Code** solution for deploying production-ready Amazon EKS clusters with **Kasten K10 data protection platform**. This repository provides both **shell scripts** and **Terraform modules** for automated deployment, backup, and disaster recovery on AWS.
+
+> **Author**: uldyssian-sh (LT) · **Version**: 2.0 · **License**: MIT
+
+---
 
 ## 🏗️ Architecture Overview
 
@@ -26,344 +37,178 @@ A comprehensive automation suite for deploying Amazon EKS clusters with Kasten K
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Key Components
+---
 
-- **Amazon EKS Cluster**: Managed Kubernetes service with 3 worker nodes
-- **Kasten K10**: Enterprise-grade backup and disaster recovery platform
-- **AWS Load Balancer Controller**: Manages ALB/NLB for ingress traffic
-- **EBS CSI Driver**: Enables persistent volume provisioning
-- **IAM Roles & Policies**: Secure access control for all components
-- **S3 Integration**: Long-term backup storage destination
+## ✨ Features
+
+- **🚀 Multiple Deployment Options** - Shell scripts and Terraform IaC
+- **🔒 Production Security** - IAM roles, encryption, network isolation
+- **📊 Enterprise Monitoring** - Prometheus, Grafana, CloudWatch integration
+- **⚡ Automated Backup** - Scheduled policies with S3 long-term storage
+- **🔄 Disaster Recovery** - Cross-region backup and restore capabilities
+- **💰 Cost Optimization** - Spot instances, autoscaling, resource tagging
+- **🛡️ Compliance Ready** - Security best practices and audit logging
+- **📈 Scalable Architecture** - Auto-scaling node groups and storage
+
+---
+
+## 🚀 Quick Start
+
+### Option 1: Shell Scripts (Fastest)
+```bash
+git clone https://github.com/uldyssian-sh/aws-eks-cluster-kasten.git
+cd aws-eks-cluster-kasten
+chmod +x scripts/*.sh
+
+# Deploy EKS cluster
+./scripts/create-simple-eks.sh
+
+# Deploy Kasten K10
+./scripts/deploy-kasten.sh
+
+# Get dashboard URL
+./scripts/get-kasten-url.sh
+```
+
+### Option 2: Terraform (Production)
+```bash
+cd terraform
+
+# Initialize Terraform
+terraform init
+
+# Plan deployment
+terraform plan -var="cluster_name=my-kasten-cluster"
+
+# Deploy infrastructure
+terraform apply
+
+# Configure kubectl
+aws eks update-kubeconfig --region us-west-2 --name my-kasten-cluster
+```
+
+### Option 3: Helm Chart
+```bash
+# Add Kasten repository
+helm repo add kasten https://charts.kasten.io/
+helm repo update
+
+# Deploy using custom chart
+helm install k10 ./helm/kasten-k10 -n kasten-io --create-namespace
+```
+
+---
 
 ## 📋 Prerequisites
 
 ### Required Tools
-
 | Tool | Version | Installation |
 |------|---------|-------------|
 | **AWS CLI** | v2.0+ | `curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"` |
 | **kubectl** | v1.28+ | `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"` |
 | **eksctl** | v0.150+ | `curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz"` |
+| **Terraform** | v1.6+ | `wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip` |
 | **Helm** | v3.12+ | `curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \| bash` |
 
-### AWS Requirements
-
-#### IAM Permissions
-Your AWS user/role must have the following permissions:
-- `AmazonEKSClusterPolicy`
-- `AmazonEKSWorkerNodePolicy`
-- `AmazonEKS_CNI_Policy`
-- `AmazonEC2ContainerRegistryReadOnly`
-- `IAMFullAccess` (for creating service roles)
-- `EC2FullAccess` (for VPC and security groups)
-- `S3FullAccess` (for backup storage)
-
-#### AWS Configuration
-```bash
-# Configure AWS credentials
-aws configure
-# Follow prompts to enter your AWS credentials
-# Default region name: us-west-2
-# Default output format: json
-
-# Verify configuration
-aws sts get-caller-identity
+### AWS Permissions
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "eks:*",
+        "ec2:*",
+        "iam:*",
+        "s3:*",
+        "cloudformation:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
 ```
 
-### System Requirements
-- **Operating System**: Linux, macOS, or WSL2
-- **Memory**: 4GB+ RAM
-- **Storage**: 10GB+ free space
-- **Network**: Internet connectivity for downloading container images
+---
 
-## 🚀 Quick Start
+## 📁 Repository Structure
 
-### 1. Clone Repository
-```bash
-git clone https://github.com/uldyssian-sh/aws-eks-cluster-kasten.git
-cd aws-eks-cluster-kasten
-chmod +x scripts/*.sh
+```
+aws-eks-cluster-kasten/
+├── scripts/                 # Shell scripts for quick deployment
+│   ├── create-simple-eks.sh # EKS cluster creation
+│   ├── deploy-kasten.sh     # Kasten K10 deployment
+│   ├── get-kasten-url.sh    # Dashboard access
+│   └── destroy-*.sh         # Cleanup scripts
+├── terraform/               # Infrastructure as Code
+│   ├── main.tf             # Main Terraform configuration
+│   ├── variables.tf        # Input variables
+│   └── outputs.tf          # Output values
+├── helm/                   # Helm charts
+│   └── kasten-k10/         # Custom Kasten deployment
+├── examples/               # Usage examples and templates
+│   ├── monitoring-stack.yaml
+│   └── backup-policies/
+├── docs/                   # Documentation
+├── tests/                  # Automated tests
+└── .github/workflows/      # CI/CD pipelines
 ```
 
-### 2. Deploy EKS Cluster
-```bash
-./scripts/create-simple-eks.sh
-```
-**Input prompts:**
-- Cluster name (default: kasten-eks)
-- AWS Region (default: us-west-2)
+---
 
-### 3. Deploy Kasten K10
-```bash
-./scripts/deploy-kasten.sh
-```
-**Input prompts:**
-- EKS Cluster name
-- AWS Region
-- Kasten namespace (default: kasten-io)
-- Domain name for HTTPS access
-- S3 bucket name for backups
-- SSL certificate details
+## 🔧 Configuration Options
 
-### 4. Access Dashboard
-```bash
-./scripts/get-kasten-url.sh
-```
+### Terraform Variables
+```hcl
+# terraform.tfvars
+cluster_name = "production-kasten"
+aws_region = "us-west-2"
+environment = "prod"
 
-## 📁 Script Documentation
+# Node configuration
+node_instance_types = ["t3.large"]
+node_group_desired_size = 5
+node_disk_size = 100
 
-### 🔧 create-simple-eks.sh
+# Security
+allowed_cidr_blocks = ["10.0.0.0/8"]
+enable_encryption = true
 
-**Purpose**: Creates a production-ready EKS cluster with essential add-ons.
-
-**What it does:**
-1. **Cluster Creation**: Uses eksctl to create EKS cluster with managed node groups
-2. **ALB Controller**: Installs AWS Load Balancer Controller for ingress management
-3. **EBS CSI Driver**: Enables persistent volume provisioning
-4. **Storage Class**: Creates immediate-binding storage class for Kasten
-5. **Networking**: Configures VPC, subnets, and security groups
-
-**Resources Created:**
-- EKS Cluster (v1.29)
-- 3x t3.medium worker nodes (auto-scaling 1-5)
-- VPC with public/private subnets
-- IAM roles and policies
-- EBS CSI driver addon
-- ALB controller
-
-**Execution Time**: ~15-20 minutes
-
-### 🛡️ deploy-kasten.sh
-
-**Purpose**: Deploys Kasten K10 data protection platform on EKS.
-
-**What it does:**
-1. **SSL Certificate**: Generates self-signed certificate for HTTPS
-2. **IAM Setup**: Creates Kasten-specific IAM role with S3 permissions
-3. **Helm Installation**: Deploys Kasten K10 using official Helm chart
-4. **Service Configuration**: Sets up LoadBalancer for external access
-5. **Authentication**: Configures token-based authentication
-6. **Storage Integration**: Prepares S3 backup location profile
-
-**Resources Created:**
-- Kasten K10 namespace and pods
-- TLS secret for HTTPS
-- IAM role with S3 permissions
-- LoadBalancer service
-- Cluster role binding for authentication
-
-**Execution Time**: ~10-15 minutes
-
-### 🔍 get-kasten-url.sh
-
-**Purpose**: Retrieves Kasten dashboard URL and authentication token.
-
-**What it does:**
-1. **Service Check**: Verifies Kasten deployment status
-2. **LoadBalancer**: Creates/patches gateway service for external access
-3. **URL Retrieval**: Gets external LoadBalancer hostname
-4. **Token Generation**: Creates 24-hour authentication token
-5. **Access Info**: Saves access details to artifacts file
-
-**Output:**
-- Dashboard URL
-- Authentication token
-- Access instructions
-
-### 🧪 test-permissions.sh
-
-**Purpose**: Validates AWS permissions and cluster connectivity.
-
-**What it does:**
-1. **AWS Permissions**: Tests IAM permissions for EKS operations
-2. **Cluster Access**: Verifies kubectl connectivity
-3. **Service Status**: Checks Kasten pod health
-4. **Storage**: Validates PVC binding
-5. **Network**: Tests LoadBalancer connectivity
-
-### 🗑️ destroy-kasten.sh
-
-**Purpose**: Removes Kasten K10 and associated resources.
-
-**What it does:**
-1. **Helm Cleanup**: Uninstalls Kasten K10 Helm release
-2. **Namespace Deletion**: Removes kasten-io namespace
-3. **IAM Cleanup**: Deletes Kasten-specific roles and policies
-4. **Storage Cleanup**: Removes storage class and PVCs
-5. **Verification**: Confirms all resources are deleted
-
-**Verification Report:**
-- ✅ Kasten IAM Roles: 0 remaining
-- ✅ Kasten IAM Policies: 0 remaining
-- ✅ Namespace: Deleted
-- ✅ Helm Release: Removed
-
-### 🗑️ destroy-simple-eks.sh
-
-**Purpose**: Completely removes EKS cluster and all AWS resources.
-
-**What it does:**
-1. **ALB Controller**: Uninstalls AWS Load Balancer Controller
-2. **EBS CSI**: Removes EBS CSI driver addon
-3. **Cluster Deletion**: Uses eksctl to delete entire cluster
-4. **IAM Cleanup**: Removes ALB controller policies
-5. **Verification**: Confirms complete cleanup
-
-**Verification Report:**
-- ✅ EKS Clusters: 0 remaining
-- ✅ CloudFormation Stacks: 0 remaining
-- ✅ ALB IAM Policies: 0 remaining
-- 🎯 All AWS resources cleared successfully!
-
-## 🔐 Security Features
-
-### IAM Best Practices
-- **Least Privilege**: Each component has minimal required permissions
-- **Service Accounts**: Uses Kubernetes service accounts with IAM roles
-- **OIDC Integration**: Secure token exchange between EKS and AWS
-- **Policy Scoping**: S3 permissions limited to specific bucket
-
-### Network Security
-- **Private Subnets**: Worker nodes in private subnets
-- **Security Groups**: Restrictive ingress/egress rules
-- **TLS Encryption**: HTTPS for dashboard access
-- **Load Balancer**: AWS ALB with security groups
-
-### Data Protection
-- **Encryption**: EBS volumes encrypted at rest
-- **S3 Security**: Server-side encryption for backups
-- **Access Control**: Token-based authentication
-- **Audit Logging**: CloudTrail integration
-
-## 📊 Cost Optimization
-
-### Resource Sizing
-| Component | Instance Type | Monthly Cost (us-west-2) |
-|-----------|---------------|-------------------------|
-| EKS Control Plane | Managed | $73.00 |
-| Worker Nodes (3x) | t3.medium | ~$95.00 |
-| EBS Volumes | gp3 (20GB each) | ~$6.00 |
-| Load Balancer | ALB | ~$22.00 |
-| **Total Estimated** | | **~$196.00/month** |
-
-### Cost Reduction Tips
-- Use Spot instances for non-production workloads
-- Enable cluster autoscaler for dynamic scaling
-- Schedule non-critical workloads during off-hours
-- Use S3 Intelligent Tiering for backup storage
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-#### 1. EKS Cluster Creation Fails
-```bash
-# Check AWS permissions
-aws sts get-caller-identity
-aws iam get-user
-
-# Verify eksctl version
-eksctl version
-
-# Check region availability
-aws ec2 describe-availability-zones --region us-west-2
+# Monitoring
+enable_monitoring = true
+enable_logging = true
 ```
 
-#### 2. Kasten Pods Stuck in Pending
+### Environment Variables
 ```bash
-# Check PVC status
-kubectl get pvc -n kasten-io
-
-# Verify storage class
-kubectl get storageclass
-
-# Check EBS CSI driver
-kubectl get pods -n kube-system | grep ebs-csi
+export AWS_REGION=us-west-2
+export CLUSTER_NAME=kasten-eks
+export KASTEN_NAMESPACE=kasten-io
+export S3_BUCKET_NAME=my-kasten-backups
 ```
 
-#### 3. LoadBalancer Not Getting External IP
-```bash
-# Check ALB controller
-kubectl get pods -n kube-system | grep aws-load-balancer
+---
 
-# Verify service
-kubectl describe svc gateway -n kasten-io
+## 📊 Monitoring and Observability
 
-# Check AWS Load Balancers
-aws elbv2 describe-load-balancers --region us-west-2
+### Prometheus Metrics
+```yaml
+# Deploy monitoring stack
+kubectl apply -f examples/monitoring-stack.yaml
+
+# Access Grafana dashboard
+kubectl port-forward -n monitoring svc/grafana 3000:3000
 ```
 
-#### 4. Authentication Token Issues
-```bash
-# Generate new token
-kubectl create token gateway -n kasten-io --duration=24h
-
-# Check service account
-kubectl get serviceaccount gateway -n kasten-io
-
-# Verify cluster role binding
-kubectl get clusterrolebinding k10-admin
-```
-
-### Debug Commands
-```bash
-# Check all Kasten pods
-kubectl get pods -n kasten-io -o wide
-
-# View pod logs
-kubectl logs -n kasten-io deployment/catalog-svc
-
-# Describe problematic pod
-kubectl describe pod -n kasten-io <pod-name>
-
-# Check events
-kubectl get events -n kasten-io --sort-by='.lastTimestamp'
-```
-
-## 🔄 Backup and Recovery Workflows
-
-### Setting Up S3 Backup Location
-1. Access Kasten dashboard
-2. Navigate to Settings → Location Profiles
-3. Create new S3 profile:
-   - **Name**: s3-backup-location
-   - **Type**: S3
-   - **Bucket**: Your S3 bucket name
-   - **Region**: us-west-2
-   - **Credentials**: Use IAM role (automatic)
-
-### Creating Backup Policies
-1. Go to Policies → Create New Policy
-2. Configure policy:
-   - **Applications**: Select namespaces to backup
-   - **Schedule**: Define backup frequency
-   - **Retention**: Set retention period
-   - **Location**: Select S3 profile
-
-### Disaster Recovery Testing
-```bash
-# Create test application
-kubectl create namespace test-app
-kubectl create deployment nginx --image=nginx -n test-app
-
-# Create backup policy for test-app namespace
-# Trigger manual backup
-# Delete namespace
-kubectl delete namespace test-app
-
-# Restore from backup using Kasten dashboard
-```
-
-## 📈 Monitoring and Observability
-
-### Kasten Metrics
+### Key Metrics
 - Backup success/failure rates
 - Recovery time objectives (RTO)
-- Recovery point objectives (RPO)
 - Storage utilization
 - Policy compliance
+- Cost optimization metrics
 
-### AWS CloudWatch Integration
+### CloudWatch Integration
 ```bash
 # Enable container insights
 aws eks update-cluster-config \
@@ -372,77 +217,212 @@ aws eks update-cluster-config \
   --logging '{"enable":["api","audit","authenticator","controllerManager","scheduler"]}'
 ```
 
-### Prometheus Integration
-Kasten K10 exposes Prometheus metrics at `/k10/prometheus/federate`
+---
 
-## 🔄 Upgrade Procedures
+## 💰 Cost Optimization
 
-### Upgrading Kasten K10
-```bash
-# Update Helm repository
-helm repo update kasten
+### Resource Sizing
+| Component | Instance Type | Monthly Cost (us-west-2) |
+|-----------|---------------|-------------------------|
+| EKS Control Plane | Managed | $73.00 |
+| Worker Nodes (3x) | t3.medium | ~$95.00 |
+| EBS Volumes | gp3 (50GB each) | ~$15.00 |
+| Load Balancer | ALB | ~$22.00 |
+| S3 Storage | Standard | ~$5.00/TB |
+| **Total Estimated** | | **~$210.00/month** |
 
-# Check available versions
-helm search repo kasten/k10 --versions
+### Cost Reduction Strategies
+```hcl
+# Use Spot instances
+node_capacity_type = "SPOT"
 
-# Upgrade to latest version
-helm upgrade k10 kasten/k10 -n kasten-io --reuse-values
+# Enable autoscaling
+node_group_min_size = 1
+node_group_max_size = 10
+
+# Use S3 Intelligent Tiering
+lifecycle_configuration {
+  rule {
+    id     = "intelligent_tiering"
+    status = "Enabled"
+    transition {
+      days          = 30
+      storage_class = "INTELLIGENT_TIERING"
+    }
+  }
+}
 ```
 
-### Upgrading EKS Cluster
-```bash
-# Check current version
-kubectl version --short
+---
 
-# Upgrade cluster
-eksctl upgrade cluster --name kasten-eks --region us-west-2
+## 🔐 Security Best Practices
 
-# Upgrade node groups
-eksctl upgrade nodegroup --cluster kasten-eks --name workers --region us-west-2
+### Network Security
+- **Private subnets** for worker nodes
+- **Security groups** with minimal required access
+- **VPC endpoints** for AWS services
+- **Network policies** for pod-to-pod communication
+
+### IAM Security
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::kasten-backups/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "us-west-2"
+        }
+      }
+    }
+  ]
+}
 ```
+
+### Encryption
+- **EBS volumes** encrypted with AWS KMS
+- **S3 buckets** with server-side encryption
+- **Secrets** stored in AWS Secrets Manager
+- **TLS** for all communications
+
+---
+
+## 🧪 Testing and Validation
+
+### Automated Tests
+```bash
+# Run validation tests
+./tests/validate-deployment.sh
+
+# Test backup and restore
+./tests/test-backup-restore.sh
+
+# Performance testing
+./tests/load-test.sh
+```
+
+### Manual Validation
+```bash
+# Check cluster health
+kubectl get nodes
+kubectl get pods -A
+
+# Verify Kasten installation
+kubectl get pods -n kasten-io
+kubectl get svc -n kasten-io
+
+# Test backup functionality
+kubectl apply -f examples/test-application.yaml
+```
+
+---
+
+## 🔄 Backup and Recovery Workflows
+
+### Automated Backup Policies
+```yaml
+apiVersion: config.kio.kasten.io/v1alpha1
+kind: Policy
+metadata:
+  name: daily-backup-policy
+  namespace: kasten-io
+spec:
+  frequency: "@daily"
+  retention:
+    daily: 7
+    weekly: 4
+    monthly: 12
+  actions:
+    - action: backup
+      backupParameters:
+        profile:
+          name: s3-backup-location
+```
+
+### Disaster Recovery Testing
+```bash
+# Create test workload
+kubectl create namespace test-dr
+kubectl create deployment nginx --image=nginx -n test-dr
+
+# Backup namespace
+# Delete namespace
+kubectl delete namespace test-dr
+
+# Restore from backup using Kasten dashboard
+```
+
+---
+
+## 📚 Documentation
+
+- [Installation Guide](docs/INSTALLATION.md) - Detailed setup instructions
+- [Configuration Guide](docs/CONFIGURATION.md) - Advanced configuration options
+- [Security Guide](docs/SECURITY.md) - Security best practices
+- [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common issues and solutions
+- [API Reference](docs/API.md) - Terraform and Helm API documentation
+
+---
 
 ## 🤝 Contributing
 
 ### Development Setup
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/new-feature`
-3. Test changes thoroughly
-4. Submit pull request
+```bash
+# Fork and clone repository
+git clone https://github.com/your-username/aws-eks-cluster-kasten.git
+cd aws-eks-cluster-kasten
+
+# Install development tools
+make install-dev-tools
+
+# Run tests
+make test
+
+# Submit pull request
+```
 
 ### Testing Checklist
 - [ ] Scripts execute without errors
-- [ ] All AWS resources are created correctly
-- [ ] Kasten dashboard is accessible
+- [ ] Terraform plan/apply succeeds
+- [ ] All AWS resources created correctly
+- [ ] Kasten dashboard accessible
 - [ ] Backup/restore functionality works
 - [ ] Cleanup scripts remove all resources
-- [ ] No sensitive data in scripts
+- [ ] No sensitive data in code
+
+---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+---
 
-**LT** - [GitHub Profile](https://github.com/uldyssian-sh)
+## 🙏 Acknowledgments
 
-## 🔗 Repository
+- **Kasten** for the excellent K10 data protection platform
+- **AWS** for managed Kubernetes and cloud services
+- **Terraform** community for infrastructure modules
+- **Kubernetes** community for container orchestration
 
-[aws-eks-cluster-kasten](https://github.com/uldyssian-sh/aws-eks-cluster-kasten)
+---
 
-## 🆘 Support
+## 📞 Support
 
-### Documentation
-- [Kasten K10 Documentation](https://docs.kasten.io/)
-- [Amazon EKS User Guide](https://docs.aws.amazon.com/eks/latest/userguide/)
-- [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/)
-
-### Community
+### Community Resources
 - [Kasten Community Slack](https://kasten.io/slack)
-- [EKS Best Practices Guide](https://aws.github.io/aws-eks-best-practices/)
-- [Kubernetes Documentation](https://kubernetes.io/docs/)
+- [AWS EKS Best Practices](https://aws.github.io/aws-eks-best-practices/)
+- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 
-### Issues
-For bugs and feature requests, please create an issue in this repository with:
+### Issues and Feature Requests
+Create an issue in this repository with:
 - Detailed description
 - Steps to reproduce
 - Expected vs actual behavior
@@ -450,15 +430,15 @@ For bugs and feature requests, please create an issue in this repository with:
 
 ---
 
-**⚠️ Important Notes:**
+**⚠️ Production Notes:**
 - Always test in non-production environments first
 - Monitor AWS costs during deployment
-- Ensure proper backup testing and validation
+- Implement proper backup testing and validation
 - Follow security best practices for production use
-- Keep scripts and tools updated to latest versions
+- Keep tools and dependencies updated
 
 **🎯 Success Metrics:**
 - Cluster deployment: < 20 minutes
-- Kasten installation: < 15 minutes
-- Backup completion: < 30 minutes (varies by data size)
-- Recovery time: < 10 minutes (varies by data size)
+- Kasten installation: < 15 minutes  
+- Backup completion: < 30 minutes
+- Recovery time: < 10 minutes
