@@ -453,3 +453,14 @@ Create an issue in this repository with:
 - Kasten installation: < 15 minutes
 - Backup completion: < 30 minutes
 - Recovery time: < 10 minutes
+## 🔒 Security Notice
+
+This repository contains example configurations and templates. Before using in production:
+
+1. **Replace all placeholder values** with your actual credentials
+2. **Use environment variables** for sensitive data (see `.env.example`)
+3. **Never commit real passwords** or API keys to version control
+4. **Follow the principle of least privilege** for all access controls
+5. **Regularly rotate credentials** and access keys
+
+For more security guidelines, see [SECURITY.md](SECURITY.md).
