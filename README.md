@@ -7,7 +7,8 @@
 [![Terraform](https://img.shields.io/badge/Terraform-1.6%2B-purple)](https://www.terraform.io/)
 [![CI](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/actions/workflows/ci.yml/badge.svg)](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/actions/workflows/ci.yml)
 
-A comprehensive **Infrastructure as Code** solution for deploying production-ready Amazon EKS clusters with **Kasten K10 data protection platform**. This repository provides both **shell scripts** and **Terraform modules** for automated deployment, backup, and disaster recovery on AWS.
+A comprehensive **Infrastructure as Code** solution for deploying production-ready Amazon EKS clusters with **Kasten K10 data protection platform**.
+This repository provides both **shell scripts** and **Terraform modules** for automated deployment, backup, and disaster recovery on AWS.
 
 ## 🏗️ Architecture
 
