@@ -450,6 +450,6 @@ Create an issue in this repository with:
 
 **🎯 Success Metrics:**
 - Cluster deployment: < 20 minutes
-- Kasten installation: < 15 minutes  
+- Kasten installation: < 15 minutes
 - Backup completion: < 30 minutes
 - Recovery time: < 10 minutes
