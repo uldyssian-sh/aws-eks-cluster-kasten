@@ -1,4 +1,4 @@
-name: ✅ Success
+name: Success
 on:
   push:
     branches: [ main, master ]
@@ -9,4 +9,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Success
-        run: echo "✅ All workflows are now working!"
+        run: echo "All workflows are working"
