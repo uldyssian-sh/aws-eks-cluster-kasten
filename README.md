@@ -7,7 +7,14 @@
 
 ## 🎯 Overview
 
-Enterprise-grade aws eks cluster kasten solution with professional automation, security, and scalability features.
+Professional aws eks cluster kasten solution with enterprise-grade automation and security features.
+
+## 📊 Repository Stats
+
+- **Files:**       41
+- **Technologies:** Terraform YAML Bash
+- **Type:** Infrastructure Automation
+- **Status:** Production Ready
 
 ## ✨ Features
 
@@ -23,11 +30,29 @@ Enterprise-grade aws eks cluster kasten solution with professional automation, s
 ## 🚀 Quick Start
 
 ```bash
+# Clone repository
 git clone https://github.com/uldyssian-sh/aws-eks-cluster-kasten.git
 cd aws-eks-cluster-kasten
+
+# Setup environment
 chmod +x setup.sh
 ./setup.sh
 ```
+
+
+## 🏗️ Terraform Usage
+
+```bash
+# Initialize Terraform
+terraform init
+
+# Plan deployment
+terraform plan
+
+# Apply configuration
+terraform apply
+```
+
 
 ## 📚 Documentation
 
@@ -47,8 +72,8 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file.
 
 ## 🆘 Support
 
-- 🐛 **Issues**: [GitHub Issues](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/issues)
-- 📖 **Documentation**: [Wiki](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/wiki)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/uldyssian-sh/REPO_NAME/issues)
+- 📖 **Documentation**: [Wiki](https://github.com/uldyssian-sh/REPO_NAME/wiki)
 
 ---
 
