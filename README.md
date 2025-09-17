@@ -1,95 +1,85 @@
-# AWS EKS Infrastructure
+# AWS EKS Cluster with Kasten K10
 
-[![CI](https://github.com/uldyssian-sh/REPO_NAME/workflows/CI/badge.svg)](https://github.com/uldyssian-sh/REPO_NAME/actions)
-[![Terraform](https://img.shields.io/badge/Terraform-1.0+-blue.svg)](https://www.terraform.io/)
-[![AWS](https://img.shields.io/badge/AWS-EKS-orange.svg)](https://aws.amazon.com/eks/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<div align="center">
+  <img src="https://www.kasten.io/hubfs/kasten_december2016/Images/kasten-logo.png" alt="Kasten K10" width="300"/>
+  
+  [![EKS](https://img.shields.io/badge/AWS-EKS-FF9900.svg)](https://aws.amazon.com/eks/)
+  [![Kasten K10](https://img.shields.io/badge/Kasten-K10-blue.svg)](https://www.kasten.io/)
+  [![Backup](https://img.shields.io/badge/Backup-Disaster%20Recovery-green.svg)](https://www.kasten.io/product/)
+</div>
 
-## Overview
+## 🔄 Overview
 
-Production-ready AWS EKS cluster automation with Terraform, featuring security best practices and monitoring.
+Production-ready EKS cluster with Kasten K10 for Kubernetes backup, disaster recovery, and application mobility. Complete data protection solution for cloud-native applications.
 
-## Architecture
+## 🎯 Features
+
+- **Automated Backups**: Application-consistent backups
+- **Disaster Recovery**: Cross-region and cross-cloud recovery
+- **Application Mobility**: Migrate applications between clusters
+- **Policy Management**: Automated backup policies
+- **Compliance**: Regulatory compliance reporting
+
+## 🚀 Quick Start
+
+```bash
+# Deploy EKS cluster
+terraform init
+terraform apply
+
+# Install Kasten K10
+helm repo add kasten https://charts.kasten.io/
+helm install k10 kasten/k10 --namespace kasten-io --create-namespace
+
+# Access K10 Dashboard
+kubectl port-forward service/gateway 8080:8000 --namespace kasten-io
+# Open http://localhost:8080/k10/
+```
+
+## 📊 Backup Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   VPC/Subnets   │────│   EKS Cluster   │────│   Worker Nodes  │
+│   EKS Cluster   │────│   Kasten K10    │────│   S3 Backup     │
+│   Applications  │    │   Data Services │    │   Storage       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          └───────────────────────┼───────────────────────┘
                                  │
                     ┌─────────────────┐
                     │   Monitoring    │
+                    │   & Alerting    │
                     └─────────────────┘
 ```
 
-## Features
+## 🔧 Backup Policies
 
-- 🏗️ **Infrastructure as Code**: Terraform modules
-- 🔐 **Security**: IAM roles, security groups, encryption
-- 📊 **Monitoring**: CloudWatch, Prometheus, Grafana
-- 🚀 **Auto-scaling**: Cluster and pod autoscaling
-- 🔄 **CI/CD Ready**: GitHub Actions integration
-
-## Prerequisites
-
-- AWS CLI configured
-- Terraform >= 1.0
-- kubectl
-- Helm
-
-## Quick Start
-
-```bash
-# Clone and setup
-git clone https://github.com/uldyssian-sh/REPO_NAME.git
-cd REPO_NAME
-
-# Initialize Terraform
-terraform init
-
-# Plan deployment
-terraform plan
-
-# Deploy cluster
-terraform apply
+```yaml
+# Example backup policy
+apiVersion: config.kio.kasten.io/v1alpha1
+kind: Policy
+metadata:
+  name: daily-backup-policy
+spec:
+  frequency: "@daily"
+  retention:
+    daily: 7
+    weekly: 4
+    monthly: 12
+  actions:
+    - action: backup
+    - action: export
+      exportParameters:
+        profile:
+          name: s3-backup-profile
 ```
 
-## Configuration
+## 📚 Documentation
 
-```hcl
-module "eks" {
-  source = "./terraform"
-  
-  cluster_name    = "production-eks"
-  cluster_version = "1.28"
-  
-  vpc_cidr = "10.0.0.0/16"
-  
-  node_groups = {
-    main = {
-      instance_types = ["t3.medium"]
-      min_size      = 1
-      max_size      = 10
-      desired_size  = 3
-    }
-  }
-}
-```
+- [Installation Guide](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/wiki/Installation)
+- [Backup Configuration](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/wiki/Backup-Config)
+- [Disaster Recovery](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/wiki/Disaster-Recovery)
 
-## Documentation
-
-- [Architecture Guide](docs/architecture.md)
-- [Deployment Guide](docs/deployment.md)
-- [Monitoring Setup](docs/monitoring.md)
-- [Security Hardening](docs/security.md)
-
-## Monitoring
-
-Access monitoring dashboards:
-- Grafana: `kubectl port-forward svc/grafana 3000:80`
-- Prometheus: `kubectl port-forward svc/prometheus 9090:9090`
-
-## License
+## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
