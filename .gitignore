@@ -49,3 +49,12 @@ Thumbs.db
 node_modules/
 .vscode/settings.json
 .idea/
+
+# Security
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.local
+secrets/
