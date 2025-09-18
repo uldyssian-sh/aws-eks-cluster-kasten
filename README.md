@@ -37,25 +37,92 @@ Production-ready EKS cluster with Kasten K10 for Kubernetes backup, disaster rec
 
 ## 🚀 Quick Start
 
+### Prerequisites
+
+- AWS CLI configured with appropriate permissions
+- kubectl installed
+- Helm 3.x installed
+- Terraform >= 1.5 (optional)
+- Docker (optional)
+
+### Quick Deployment
+
 ```bash
-# Deploy EKS cluster
-terraform init
-terraform apply
+# Create EKS cluster
+./scripts/create-eks-cluster.sh
 
-# Install Kasten K10
-helm repo add kasten https://charts.kasten.io/
-helm install k10 kasten/k10 --namespace kasten-io --create-namespace
+# Deploy Kasten K10
+./scripts/deploy-kasten.sh
 
-# Access K10 Dashboard
-kubectl port-forward service/gateway 8080:8000 --namespace kasten-io
-# Open http://localhost:8080/k10/
+# Get access URL
+./scripts/get-kasten-url.sh
 ```
 
-## 📚 Documentation
+### Terraform Deployment
 
-- [Installation Guide](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/wiki/Installation)
-- [Backup Configuration](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/wiki/Backup-Config)
-- [Disaster Recovery](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/wiki/Disaster-Recovery)
+```bash
+# Initialize Terraform
+cd terraform
+terraform init
+
+# Plan deployment
+terraform plan
+
+# Apply configuration
+terraform apply
+```
+
+## 📖 Documentation
+
+- [Installation Guide](docs/README.md)
+- [Configuration Guide](terraform/variables.tf)
+- [Examples](examples/)
+- [Scripts Documentation](scripts/)
+- [Helm Charts](helm/)
+
+## 🔧 Configuration
+
+Configuration can be done through:
+
+1. **Terraform Variables** - See [variables.tf](terraform/variables.tf)
+2. **Environment Variables** - AWS credentials and region
+3. **Script Parameters** - Interactive configuration
+
+## 📊 Usage Examples
+
+### Basic EKS Cluster
+
+```bash
+# Create simple EKS cluster
+./scripts/create-simple-eks.sh
+```
+
+### Advanced Configuration
+
+```bash
+# Use Terraform for production deployment
+cd terraform
+terraform apply -var="environment=prod" -var="node_instance_types=[\"m5.large\"]"
+```
+
+## 🧪 Testing
+
+Validate your deployment:
+
+```bash
+# Test AWS permissions
+./scripts/test-permissions.sh
+
+# Validate Terraform configuration
+cd terraform && terraform validate
+
+# Check cluster status
+kubectl get nodes
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md).
 
 ## 📄 License
 

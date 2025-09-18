@@ -101,7 +101,7 @@ metadata:
   namespace: monitoring
 type: Opaque
 data:
-  password: [REDACTED]  # base64 encoded 'admin123' - change this!
+  password: [REDACTED]  # Change this default password
 ---
 apiVersion: v1
 kind: ConfigMap

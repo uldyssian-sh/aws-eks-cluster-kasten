@@ -66,18 +66,33 @@ variable "node_group_min_size" {
   description = "Minimum number of nodes in node group"
   type        = number
   default     = 1
+  
+  validation {
+    condition     = var.node_group_min_size >= 1 && var.node_group_min_size <= 10
+    error_message = "Node group minimum size must be between 1 and 10."
+  }
 }
 
 variable "node_group_max_size" {
   description = "Maximum number of nodes in node group"
   type        = number
   default     = 5
+  
+  validation {
+    condition     = var.node_group_max_size >= 1 && var.node_group_max_size <= 20
+    error_message = "Node group maximum size must be between 1 and 20."
+  }
 }
 
 variable "node_group_desired_size" {
   description = "Desired number of nodes in node group"
   type        = number
   default     = 3
+  
+  validation {
+    condition     = var.node_group_desired_size >= 1 && var.node_group_desired_size <= 20
+    error_message = "Node group desired size must be between 1 and 20."
+  }
 }
 
 variable "node_disk_size" {

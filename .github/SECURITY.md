@@ -2,48 +2,124 @@
 
 ## Supported Versions
 
+We actively support the following versions with security updates:
+
 | Version | Supported          |
 | ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| < Latest| :x:                |
+| 1.x.x   | :white_check_mark: |
+| < 1.0   | :x:                |
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it responsibly:
+We take security vulnerabilities seriously. If you discover a security vulnerability, please follow these steps:
 
-### How to Report
-- **Email**: Create an issue with label `security`
-- **Response Time**: We aim to respond within 48 hours
-- **Updates**: You will receive updates every 7 days
+### 1. Do NOT create a public GitHub issue
 
-### What to Include
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if available)
+Security vulnerabilities should not be reported through public GitHub issues.
 
-### Our Commitment
-- We will acknowledge receipt within 48 hours
-- We will provide a detailed response within 7 days
-- We will work with you to understand and resolve the issue
-- We will credit you in our security advisories (if desired)
+### 2. Report privately
+
+Please report security vulnerabilities by creating a private security advisory:
+
+1. Go to the [Security tab](https://github.com/uldyssian-sh/aws-eks-cluster-kasten/security)
+2. Click "Report a vulnerability"
+3. Fill out the security advisory form with detailed information
+
+### 3. Include the following information
+
+- Type of vulnerability
+- Full paths of source file(s) related to the vulnerability
+- Location of the affected source code (tag/branch/commit or direct URL)
+- Any special configuration required to reproduce the issue
+- Step-by-step instructions to reproduce the issue
+- Proof-of-concept or exploit code (if possible)
+- Impact of the issue, including how an attacker might exploit it
+
+### 4. Response timeline
+
+- **Initial response**: Within 48 hours
+- **Status update**: Within 7 days
+- **Resolution**: Varies based on complexity, typically within 30 days
 
 ## Security Best Practices
 
-### For Contributors
-- Keep dependencies updated
-- Follow secure coding practices
-- Run security scans before submitting PRs
-- Never commit secrets or credentials
+When using this project, please follow these security best practices:
 
-### For Users
-- Always use the latest version
-- Report suspicious behavior
-- Follow installation instructions carefully
-- Keep your environment updated
+### AWS Security
+- Use IAM roles with least privilege principle
+- Enable AWS CloudTrail for audit logging
+- Use AWS Secrets Manager for sensitive data
+- Enable encryption at rest and in transit
+- Regularly rotate access keys and credentials
+
+### Kubernetes Security
+- Use RBAC for access control
+- Enable network policies
+- Scan container images for vulnerabilities
+- Use Pod Security Standards
+- Regularly update Kubernetes versions
+
+### Kasten K10 Security
+- Enable authentication and authorization
+- Use HTTPS for dashboard access
+- Regularly backup encryption keys
+- Monitor backup and restore activities
+- Keep Kasten K10 updated to latest version
+
+### Infrastructure Security
+- Use private subnets for worker nodes
+- Enable VPC Flow Logs
+- Implement security groups with minimal required access
+- Use AWS Systems Manager for secure access
+- Enable GuardDuty for threat detection
+
+## Security Features
+
+This project includes the following security features:
+
+- **Encryption**: EBS volumes and S3 buckets encrypted by default
+- **Network Security**: Private subnets and security groups configured
+- **Access Control**: IAM roles with minimal required permissions
+- **Monitoring**: CloudWatch logging and monitoring enabled
+- **Compliance**: Follows AWS and Kubernetes security best practices
+
+## Security Scanning
+
+We use automated security scanning tools:
+
+- **GitHub Security Advisories**: Dependency vulnerability scanning
+- **CodeQL**: Static code analysis
+- **Dependabot**: Automated dependency updates
+- **Custom Security Workflows**: Infrastructure and configuration validation
+
+## Compliance
+
+This project aims to comply with:
+
+- AWS Well-Architected Framework Security Pillar
+- CIS Kubernetes Benchmark
+- NIST Cybersecurity Framework
+- SOC 2 Type II controls (where applicable)
+
+## Security Updates
+
+Security updates are released as soon as possible after a vulnerability is confirmed and a fix is available. Updates are communicated through:
+
+- GitHub Security Advisories
+- Release notes
+- Repository notifications
 
 ## Contact
 
-For security-related questions: Create an issue with `security` label.
+For security-related questions or concerns, please contact:
 
-Thank you for helping keep our project secure!
+- **Security Team**: Create a private security advisory
+- **General Questions**: Open a regular GitHub issue (for non-security topics)
+
+## Acknowledgments
+
+We appreciate the security research community and will acknowledge researchers who responsibly disclose vulnerabilities (with their permission).
+
+---
+
+**Note**: This security policy is subject to change. Please check back regularly for updates.

@@ -50,11 +50,40 @@ node_modules/
 .vscode/settings.json
 .idea/
 
-# Security
+# Security sensitive files
 *.pem
 *.key
 *.p12
 *.pfx
 .env
 .env.local
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+kubeconfig*
+*.kubeconfig
 secrets/
+*.secret
+
+# AWS specific
+.aws/
+credentials
+config
+
+# Kubernetes
+*.yaml.bak
+*.yml.bak
+kustomization.yaml.bak
+
+# Helm
+*.tgz
+charts/
+Chart.lock
+
+# Local development
+.local/
+local/
+dev/
+*.local
