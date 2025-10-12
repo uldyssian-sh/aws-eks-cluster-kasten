@@ -1,6 +1,16 @@
 name: AI-Powered Automation
 
 on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
   schedule:
     - cron: '0 2 * * 0'  # Weekly on Sunday at 2 AM UTC
   workflow_dispatch:
@@ -11,11 +21,6 @@ on:
       - 'terraform/**'
       - 'scripts/**'
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-  actions: read
   security-events: write
 
 jobs:

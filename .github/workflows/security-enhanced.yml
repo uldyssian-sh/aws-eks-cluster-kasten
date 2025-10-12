@@ -2,16 +2,22 @@ name: Enhanced Security Scan
 
 on:
   push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+  push:
     branches: [main, develop]
   pull_request:
     branches: [main]
   schedule:
     - cron: '0 3 * * 1'  # Weekly on Monday at 3 AM UTC
 
-permissions:
-  contents: read
-  security-events: write
-  actions: read
 
 jobs:
   security-scan:
