@@ -161,4 +161,4 @@ variable "enable_logging" {
   description = "Enable centralized logging (ELK stack)"
   type        = bool
   default     = false
-}
+}# Updated 20251109_123800

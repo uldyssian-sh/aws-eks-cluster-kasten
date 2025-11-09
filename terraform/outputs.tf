@@ -114,4 +114,4 @@ output "estimated_monthly_cost" {
     total_estimated   = "${73 + (var.node_group_desired_size * 31) + (var.node_group_desired_size * var.node_disk_size * 0.10) + 22}"
     note              = "Prices are estimates based on us-west-2 region. Use AWS Pricing Calculator for accurate costs."
   }
-}
+}# Updated 20251109_123800
