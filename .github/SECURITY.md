@@ -122,4 +122,4 @@ We appreciate the security research community and will acknowledge researchers w
 
 ---
 
-**Note**: This security policy is subject to change. Please check back regularly for updates.
+**Note**: This security policy is subject to change. Please check back regularly for updates.# Updated Sun Nov  9 12:50:08 CET 2025

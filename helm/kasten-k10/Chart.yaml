@@ -25,4 +25,4 @@ maintainers:
 dependencies:
   - name: k10
     version: "6.5.0"
-    repository: https://charts.kasten.io/
+    repository: https://charts.kasten.io/# Updated Sun Nov  9 12:50:08 CET 2025

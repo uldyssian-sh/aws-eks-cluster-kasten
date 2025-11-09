@@ -157,4 +157,4 @@ echo -e "${GREEN}=== EKS Cluster Ready ===${NC}"
 echo -e "${CYAN}Cluster: ${CLUSTER_NAME}${NC}"
 echo -e "${CYAN}Region: ${AWS_REGION}${NC}"
 echo -e "${CYAN}VPC: ${VPC_ID}${NC}"
-echo -e "${CYAN}Ready for Kasten K10!${NC}"
+echo -e "${CYAN}Ready for Kasten K10!${NC}"# Updated Sun Nov  9 12:50:08 CET 2025

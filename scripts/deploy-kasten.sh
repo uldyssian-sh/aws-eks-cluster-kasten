@@ -254,4 +254,4 @@ echo -e "${CYAN}3. Configure S3 backup location in Kasten dashboard${NC}"
 echo -e "${CYAN}4. Create backup policies for your applications${NC}"
 echo -e "${CYAN}5. To get a new token anytime: kubectl create token gateway -n kasten-io --duration=24h${NC}"
 
-echo -e "${GREEN}🎉 Kasten K10 is ready for backup and disaster recovery!${NC}"
+echo -e "${GREEN}🎉 Kasten K10 is ready for backup and disaster recovery!${NC}"# Updated Sun Nov  9 12:50:08 CET 2025

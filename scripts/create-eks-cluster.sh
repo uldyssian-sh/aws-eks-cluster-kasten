@@ -442,4 +442,4 @@ echo -e "${GREEN}=== EKS Cluster Creation Complete ===${NC}"
 echo -e "${CYAN}Cluster Name: ${CLUSTER_NAME}${NC}"
 echo -e "${CYAN}Region: ${AWS_REGION}${NC}"
 echo -e "${CYAN}VPC ID: ${VPC_ID}${NC}"
-echo -e "${CYAN}Ready for Kasten K10 deployment!${NC}"
+echo -e "${CYAN}Ready for Kasten K10 deployment!${NC}"# Updated Sun Nov  9 12:50:08 CET 2025

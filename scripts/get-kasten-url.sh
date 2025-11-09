@@ -51,4 +51,4 @@ Token: ${TOKEN}
 Date: $(date)
 EOF
 
-echo -e "${GREEN}URL saved to: artifacts/kasten-access.txt${NC}"
+echo -e "${GREEN}URL saved to: artifacts/kasten-access.txt${NC}"# Updated Sun Nov  9 12:50:08 CET 2025
