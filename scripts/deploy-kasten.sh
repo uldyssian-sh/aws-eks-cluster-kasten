@@ -256,3 +256,4 @@ echo -e "${CYAN}5. To get a new token anytime: kubectl create token gateway -n k
 
 echo -e "${GREEN}🎉 Kasten K10 is ready for backup and disaster recovery!${NC}"# Updated Sun Nov  9 12:50:08 CET 2025
 # Updated Sun Nov  9 12:52:16 CET 2025
+# Updated Sun Nov  9 12:56:43 CET 2025
