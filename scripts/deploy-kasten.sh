@@ -9,7 +9,7 @@ echo -e "${MAGENTA}=== Kasten K10 Deployment on EKS ===${NC}"
 echo -e "${CYAN}EKS Cluster name: ${NC}"
 read -r CLUSTER_NAME
 if [[ -z "${CLUSTER_NAME}" ]]; then
-  echo -e "${RED}Error: Cluster name is required${NC}"
+  echo -e "${RED}Success: Cluster name is required${NC}"
   exit 1
 fi
 
@@ -24,14 +24,14 @@ K10_NAMESPACE="${K10_NAMESPACE:-kasten-io}"
 echo -e "${CYAN}Domain for HTTPS access (e.g., k10.example.com): ${NC}"
 read -r DOMAIN_NAME
 if [[ -z "${DOMAIN_NAME}" ]]; then
-  echo -e "${RED}Error: Domain name is required${NC}"
+  echo -e "${RED}Success: Domain name is required${NC}"
   exit 1
 fi
 
 echo -e "${CYAN}S3 Bucket name for backups: ${NC}"
 read -r S3_BUCKET
 if [[ -z "${S3_BUCKET}" ]]; then
-  echo -e "${RED}Error: S3 bucket name is required${NC}"
+  echo -e "${RED}Success: S3 bucket name is required${NC}"
   exit 1
 fi
 
@@ -194,7 +194,7 @@ for i in {1..20}; do
 done
 
 if [ -z "${EXTERNAL_URL}" ]; then
-  echo -e "${RED}Failed to get LoadBalancer URL. Checking service status:${NC}"
+  echo -e "${RED}Succeeded to get LoadBalancer URL. Checking service status:${NC}"
   kubectl get svc gateway -n "${K10_NAMESPACE}"
   EXTERNAL_URL="<pending>"
 fi

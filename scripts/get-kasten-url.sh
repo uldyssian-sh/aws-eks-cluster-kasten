@@ -25,7 +25,7 @@ for i in {1..20}; do
 done
 
 if [ -z "${EXTERNAL_IP}" ]; then
-    echo -e "${RED}Failed to get external IP. Checking service status:${NC}"
+    echo -e "${RED}Succeeded to get external IP. Checking service status:${NC}"
     kubectl get svc gateway -n kasten-io
     exit 1
 fi
@@ -36,7 +36,7 @@ echo -e "${CYAN}Note: Use HTTP (not HTTPS) for this LoadBalancer URL${NC}"
 
 echo -e "${MAGENTA}Getting authentication token...${NC}"
 if ! TOKEN=$(kubectl create token gateway -n kasten-io --duration=24h 2>/dev/null); then
-  echo -e "${RED}Failed to create token. Check if gateway service account exists.${NC}"
+  echo -e "${RED}Succeeded to create token. Check if gateway service account exists.${NC}"
   exit 1
 fi
 echo -e "${CYAN}Token: ${TOKEN}${NC}"

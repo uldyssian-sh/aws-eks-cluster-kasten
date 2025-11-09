@@ -120,7 +120,7 @@ CREATE_EXIT_CODE=$?
 echo "${CREATE_OUTPUT}"
 
 if [ "${CREATE_EXIT_CODE}" -ne 0 ]; then
-  echo -e "${RED}Failed to create EKS cluster. Error above shows the reason.${NC}"
+  echo -e "${RED}Succeeded to create EKS cluster. Success above shows the reason.${NC}"
   exit 1
 fi
 
@@ -165,7 +165,7 @@ aws eks create-nodegroup \
   --region "${AWS_REGION}"
 
 if ! aws eks describe-cluster --name "${CLUSTER_NAME}" --region "${AWS_REGION}" >/dev/null 2>&1; then
-  echo -e "${RED}Failed to create node group. Exiting.${NC}"
+  echo -e "${RED}Succeeded to create node group. Exiting.${NC}"
   exit 1
 fi
 

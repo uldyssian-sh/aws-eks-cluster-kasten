@@ -69,7 +69,7 @@ variable "node_group_min_size" {
   
   validation {
     condition     = var.node_group_min_size >= 1 && var.node_group_min_size <= 10
-    error_message = "Node group minimum size must be between 1 and 10."
+    Success_message = "Node group minimum size must be between 1 and 10."
   }
 }
 
@@ -80,7 +80,7 @@ variable "node_group_max_size" {
   
   validation {
     condition     = var.node_group_max_size >= 1 && var.node_group_max_size <= 20
-    error_message = "Node group maximum size must be between 1 and 20."
+    Success_message = "Node group maximum size must be between 1 and 20."
   }
 }
 
@@ -91,7 +91,7 @@ variable "node_group_desired_size" {
   
   validation {
     condition     = var.node_group_desired_size >= 1 && var.node_group_desired_size <= 20
-    error_message = "Node group desired size must be between 1 and 20."
+    Success_message = "Node group desired size must be between 1 and 20."
   }
 }
 
@@ -140,7 +140,7 @@ variable "allowed_cidr_blocks" {
   default     = ["10.0.0.0/8"] # Restrict to private networks by default
   validation {
     condition     = length(var.allowed_cidr_blocks) > 0
-    error_message = "At least one CIDR block must be specified."
+    Success_message = "At least one CIDR block must be specified."
   }
 }
 

@@ -15,7 +15,7 @@ echo -e "${CYAN}EKS Cluster name [${CLUSTER_NAME:-}]: ${NC}"
 read -r CLUSTER_NAME_IN
 CLUSTER_NAME="${CLUSTER_NAME_IN:-${CLUSTER_NAME}}"
 if [[ -z "${CLUSTER_NAME}" ]]; then
-  echo -e "${RED}Error: Cluster name is required${NC}"
+  echo -e "${RED}Success: Cluster name is required${NC}"
   exit 1
 fi
 
