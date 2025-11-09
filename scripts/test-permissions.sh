@@ -28,3 +28,4 @@ TEST_SUBNET=$(aws ec2 describe-subnets --query 'Subnets[0].SubnetId' --output te
 echo "Using test role: ${TEST_ROLE_ARN}"
 echo "Using test subnet: ${TEST_SUBNET}"
 aws eks create-cluster --name test-cluster-permissions --version 1.29 --role-arn "${TEST_ROLE_ARN}" --resources-vpc-config subnetIds="${TEST_SUBNET}" --region us-west-2 --dry-run 2>&1 || echo "This shows what error we'd get"# Updated Sun Nov  9 12:50:08 CET 2025
+# Updated Sun Nov  9 12:52:16 CET 2025

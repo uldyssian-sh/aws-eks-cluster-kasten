@@ -67,3 +67,4 @@ fi
 
 echo -e "${GREEN}\n🎯 All AWS resources cleared successfully!${NC}"
 echo -e "${CYAN}No ongoing charges from this deployment.${NC}"# Updated Sun Nov  9 12:50:08 CET 2025
+# Updated Sun Nov  9 12:52:16 CET 2025

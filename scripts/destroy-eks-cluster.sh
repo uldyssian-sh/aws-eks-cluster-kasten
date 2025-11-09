@@ -186,3 +186,4 @@ else
 fi
 
 echo -e "\\n${GREEN}🎉 All EKS cluster resources successfully destroyed!${NC}"# Updated Sun Nov  9 12:50:08 CET 2025
+# Updated Sun Nov  9 12:52:16 CET 2025

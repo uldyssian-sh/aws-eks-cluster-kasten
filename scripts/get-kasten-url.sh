@@ -52,3 +52,4 @@ Date: $(date)
 EOF
 
 echo -e "${GREEN}URL saved to: artifacts/kasten-access.txt${NC}"# Updated Sun Nov  9 12:50:08 CET 2025
+# Updated Sun Nov  9 12:52:16 CET 2025
