@@ -1,7 +1,0 @@
-name: Folder Success
-on: [push, workflow_dispatch]
-jobs:
-  success:
-    runs-on: ubuntu-latest
-    steps:
-    - run: echo "✅ All folders SUCCESS"
