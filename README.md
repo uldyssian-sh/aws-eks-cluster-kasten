@@ -12,6 +12,12 @@
 [![Size](https://img.shields.io/github/repo-size/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](#)
 [![Security Scan](https://img.shields.io/badge/security-scanned-green?style=flat-square)](#)
 
+[![License](https://img.shields.io/github/license/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](LICENSE)
+[![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat-square)](#)
+[![Languages](https://img.shields.io/github/languages/count/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](#)
+[![Size](https://img.shields.io/github/repo-size/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](#)
+[![Security Scan](https://img.shields.io/badge/security-scanned-green?style=flat-square)](#)
+
 <div align="center">
 
 ```
@@ -61,6 +67,12 @@ Production-ready EKS cluster with Kasten K10 for Kubernetes backup, disaster rec
 
 ```bash
 # Create EKS cluster
+
+[![License](https://img.shields.io/github/license/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](LICENSE)
+[![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat-square)](#)
+[![Languages](https://img.shields.io/github/languages/count/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](#)
+[![Size](https://img.shields.io/github/repo-size/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](#)
+[![Security Scan](https://img.shields.io/badge/security-scanned-green?style=flat-square)](#)
 
 [![License](https://img.shields.io/github/license/uldyssian-sh/aws-eks-cluster-kasten?style=flat-square)](LICENSE)
 [![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat-square)](#)
