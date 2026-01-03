@@ -127,3 +127,4 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
+⭐ Star this repository if you find it helpful!
