@@ -87,3 +87,7 @@ Chart.lock
 local/
 dev/
 *.local
+
+# Security - Sensitive Files
+config.json
+secrets.json
